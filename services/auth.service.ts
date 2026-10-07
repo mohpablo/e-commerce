@@ -72,3 +72,12 @@ export async function login(input: LoginInput): Promise<ServiceResult> {
     };
   }
 }
+
+export async function signInWithGoogle() {
+  return auth.api.signInSocial({
+    body: {
+      provider: "google",
+      callbackURL: "/",
+    },
+  });
+}

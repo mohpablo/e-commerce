@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import Link from "next/link";
 
-import { loginAction } from "@/app/actions/auth.action";
+import { loginAction, signInWithGoogleAction } from "@/app/actions/auth.action";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +18,11 @@ import { Label } from "@/components/ui/label";
 
 export function LoginForm() {
   const [state, formAction, isPending] = useActionState(loginAction, {});
+
+  const handleGoogleSignIn = async () => {
+    await signInWithGoogleAction();
+    console.log("oauth");
+  };
 
   return (
     <Card className="w-full max-w-md shadow-sm">
@@ -34,6 +39,49 @@ export function LoginForm() {
       </CardHeader>
 
       <CardContent>
+        {/* Google OAuth */}
+
+        <Button
+          type="button"
+          className="w-full"
+          onClick={handleGoogleSignIn}
+          disabled={isPending}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            className="size-4"
+            aria-hidden="true"
+          >
+            <path
+              fill="#4285F4"
+              d="M21.35 12.23c0-.79-.07-1.55-.22-2.27H12v4.3h5.22a4.46 4.46 0 0 1-1.94 2.93v2.43h3.14c1.84-1.69 2.93-4.18 2.93-7.39Z"
+            />
+            <path
+              fill="#34A853"
+              d="M12 21.91c2.63 0 4.84-.87 6.45-2.29l-3.14-2.43c-.87.58-1.98.92-3.31.92-2.54 0-4.69-1.72-5.46-4.03H3.3v2.5A9.75 9.75 0 0 0 12 21.91Z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M6.54 14.08A5.86 5.86 0 0 1 6.23 12c0-.72.12-1.42.31-2.08v-2.5H3.3A9.76 9.76 0 0 0 2.25 12c0 1.57.38 3.06 1.05 4.58l3.24-2.5Z"
+            />
+            <path
+              fill="#EA4335"
+              d="M12 5.89c1.43 0 2.72.49 3.73 1.45l2.8-2.8C16.84 2.99 14.63 2.09 12 2.09A9.75 9.75 0 0 0 3.3 7.42l3.24 2.5C7.31 7.61 9.46 5.89 12 5.89Z"
+            />
+          </svg>
+          Continue with Google
+        </Button>
+
+        {/* Divider */}
+        <div className="my-6 flex items-center gap-3">
+          <div className="h-px flex-1 bg-border" />
+          <span className="text-muted-foreground text-xs uppercase">
+            Or continue with email
+          </span>
+          <div className="h-px flex-1 bg-border" />
+        </div>
+
         <form action={formAction} className="space-y-5">
           {/* Email */}
           <div className="space-y-2">

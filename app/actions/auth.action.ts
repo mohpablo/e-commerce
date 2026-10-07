@@ -1,8 +1,10 @@
 "use server";
 
-import { login, signUp } from "@/services/auth.service";
+import { auth } from "@/lib/auth";
+import { login, signInWithGoogle, signUp } from "@/services/auth.service";
 import { LoginInput, SignupInput } from "@/services/auth.validation";
 import { LoginErrors, SignupErrors } from "@/types/auth.type";
+import { redirect } from "next/navigation";
 
 export type SignupState = {
   errors?: SignupErrors;
@@ -41,4 +43,20 @@ export async function loginAction(
   }
 
   return {};
+}
+
+export async function signInWithGoogleAction() {
+  let url: string | undefined;
+
+  try {
+    const result = await signInWithGoogle();
+    url = result.url;
+  } catch (error) {
+    console.error(error);
+    return;
+  }
+
+  if (url) {
+    redirect(url);
+  }
 }
