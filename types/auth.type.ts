@@ -1,4 +1,4 @@
-import { LoginInput, SignupInput } from "@/services/auth.validation";
+import { LoginInput, SignupInput } from "@/services/auth/auth.validation";
 
 export type SignupErrors = Partial<Record<keyof SignupInput, string[]>> & {
   _form?: string[];

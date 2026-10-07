@@ -1,8 +1,8 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { login, signInWithGoogle, signUp } from "@/services/auth.service";
-import { LoginInput, SignupInput } from "@/services/auth.validation";
+import { login, signInWithGoogle, signUp } from "@/services/auth/auth.service";
+import { LoginInput, SignupInput } from "@/services/auth/auth.validation";
 import { LoginErrors, SignupErrors } from "@/types/auth.type";
 import { redirect } from "next/navigation";
 
