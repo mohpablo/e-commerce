@@ -4,12 +4,14 @@ import { Plus } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-
-import type { ProductCardData } from "@/lib/queries";
 import { formatPrice } from "../../lib/fromat";
+import { ProductCardData } from "@/types/product.type";
 
+type Props = {
+  product: ProductCardData;
+};
 
-export function ProductCard({ product }: { product: ProductCardData }) {
+export function ProductCard({ product }: Props) {
   const [primary, secondary] = product.images;
   const soldOut = product.stock === 0;
   const lowStock = product.stock > 0 && product.stock <= 5;
@@ -73,7 +75,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
 
         <div className="mt-2 flex items-center justify-between">
           <span className="font-semibold tabular-nums">
-            {formatPrice(product.price)}
+            {formatPrice(product.price.toNumber())}
           </span>
 
           <form>

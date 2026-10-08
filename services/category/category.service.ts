@@ -1,8 +1,9 @@
-import { cache } from "react";
 import { categoryRepository } from "@/repositories/category.repository";
 
-export type NavCategory = { id: string; name: string; slug: string };
+export function getCategories(){
+  return categoryRepository.getCategories();
+}
 
-export const getNavCategories = cache(async (): Promise<NavCategory[]> => {
-  return categoryRepository.findNavCategories();
-});
+export function getCategoriesWithCount(){
+  return categoryRepository.findCategoriesWithCount();
+}

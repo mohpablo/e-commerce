@@ -1,7 +1,11 @@
 "use server";
 
-import { auth } from "@/lib/auth";
-import { login, signInWithGoogle, signUp } from "@/services/auth/auth.service";
+import {
+  login,
+  logout,
+  signInWithGoogle,
+  signUp,
+} from "@/services/auth/auth.service";
 import { LoginInput, SignupInput } from "@/services/auth/auth.validation";
 import { LoginErrors, SignupErrors } from "@/types/auth.type";
 import { redirect } from "next/navigation";
@@ -43,6 +47,10 @@ export async function loginAction(
   }
 
   return {};
+}
+
+export async function logoutAction() {
+  await logout();
 }
 
 export async function signInWithGoogleAction() {

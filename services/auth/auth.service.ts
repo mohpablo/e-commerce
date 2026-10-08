@@ -7,6 +7,7 @@ import {
 } from "./auth.validation";
 import { ServiceResult } from "@/types/ServiceResult";
 import { z } from "zod";
+import { headers } from "next/headers";
 
 export async function signUp(input: SignupInput): Promise<ServiceResult> {
   const result = signupSchema.safeParse(input);
@@ -80,4 +81,24 @@ export async function signInWithGoogle() {
       callbackURL: "/",
     },
   });
+}
+
+export async function logout(): Promise<ServiceResult> {
+  try {
+    await auth.api.signOut({
+      headers: await headers(),
+    });
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      errors: {
+        _form: ["Something went wrong while signing out."],
+      },
+    };
+  }
 }

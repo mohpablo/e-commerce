@@ -10,7 +10,7 @@ export const productCardInclude = {
 } as const;
 
 export const productRepository = {
-  async findNewest(take = 4) {
+  async findNewest(take: number) {
     return prisma.product.findMany({
       take,
       orderBy: { createdAt: "desc" },
@@ -18,7 +18,7 @@ export const productRepository = {
     });
   },
 
-  async findPopular(take = 4) {
+  async findPopular(take: number) {
     return prisma.product.findMany({
       take,
       where: { stock: { gt: 0 } },

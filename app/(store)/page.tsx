@@ -1,12 +1,19 @@
 import { CategoryGrid } from "@/components/store/categoryGrid";
-import { Hero } from "@/components/store/hero";
+import { Hero } from "@/components/store/hero/hero";
 import { ProductSection } from "@/components/store/productSection";
 import { PromoBanner } from "@/components/store/promoBanner";
-import { getHomeData } from "@/services/home/home.service";
-
+import { getCategoriesWithCount } from "@/services/category/category.service";
+import {
+  getNewestProducts,
+  getPopularProducts,
+} from "@/services/product/product.service";
 
 export default async function Home() {
-  const { categories, newest, popular } = await getHomeData();
+  const [categories, newest, popular] = await Promise.all([
+    getCategoriesWithCount(),
+    getNewestProducts(),
+    getPopularProducts(),
+  ]);
 
   return (
     <>
@@ -15,7 +22,7 @@ export default async function Home() {
       <ProductSection
         title="New arrivals"
         description="The latest additions to the store."
-        href="/products?sort=newest"
+        href="/products"
         products={newest}
       />
       <PromoBanner />

@@ -11,7 +11,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { SectionHeading } from "./sectionHeading";
-import { HomeCategory } from "@/services/home/home.service";
+import { CategoryWithCount } from "@/types/category.type";
 
 const categoryIcons: Record<string, LucideIcon> = {
   electronics: Laptop,
@@ -23,7 +23,11 @@ const categoryIcons: Record<string, LucideIcon> = {
   bags: ShoppingBag,
 };
 
-export function CategoryGrid({ categories }: { categories: HomeCategory[] }) {
+type Props = {
+  categories: CategoryWithCount[];
+};
+
+export function CategoryGrid({ categories }: Props) {
   if (categories.length === 0) return null;
 
   return (

@@ -1,10 +1,16 @@
 import Link from "next/link";
 
 import { Separator } from "@/components/ui/separator";
-import type { NavCategory } from "@/lib/queries";
+import { Category } from "@/types/category.type";
 
-export function Footer({ categories }: { categories: NavCategory[] }) {
-  const link = "text-sm text-muted-foreground transition-colors hover:text-foreground";
+
+type Props = {
+  categories: Category[];
+};
+
+export function Footer({ categories }: Props) {
+  const link =
+    "text-sm text-muted-foreground transition-colors hover:text-foreground";
 
   return (
     <footer className="border-t bg-muted/30">
@@ -22,9 +28,15 @@ export function Footer({ categories }: { categories: NavCategory[] }) {
           <div>
             <h3 className="text-sm font-semibold">Shop</h3>
             <div className="mt-4 flex flex-col gap-3">
-              <Link href="/products" className={link}>All products</Link>
-              <Link href="/products?sort=newest" className={link}>New arrivals</Link>
-              <Link href="/categories" className={link}>All categories</Link>
+              <Link href="/products" className={link}>
+                All products
+              </Link>
+              <Link href="/products?sort=newest" className={link}>
+                New arrivals
+              </Link>
+              <Link href="/categories" className={link}>
+                All categories
+              </Link>
             </div>
           </div>
 
@@ -32,7 +44,11 @@ export function Footer({ categories }: { categories: NavCategory[] }) {
             <h3 className="text-sm font-semibold">Categories</h3>
             <div className="mt-4 flex flex-col gap-3">
               {categories.slice(0, 5).map((c) => (
-                <Link key={c.id} href={`/categories/${c.slug}`} className={link}>
+                <Link
+                  key={c.id}
+                  href={`/categories/${c.slug}`}
+                  className={link}
+                >
                   {c.name}
                 </Link>
               ))}
@@ -42,10 +58,18 @@ export function Footer({ categories }: { categories: NavCategory[] }) {
           <div>
             <h3 className="text-sm font-semibold">Account</h3>
             <div className="mt-4 flex flex-col gap-3">
-              <Link href="/sign-in" className={link}>Sign in</Link>
-              <Link href="/sign-up" className={link}>Create account</Link>
-              <Link href="/orders" className={link}>Your orders</Link>
-              <Link href="/cart" className={link}>Cart</Link>
+              <Link href="/sign-in" className={link}>
+                Sign in
+              </Link>
+              <Link href="/sign-up" className={link}>
+                Create account
+              </Link>
+              <Link href="/orders" className={link}>
+                Your orders
+              </Link>
+              <Link href="/cart" className={link}>
+                Cart
+              </Link>
             </div>
           </div>
         </div>
@@ -55,8 +79,12 @@ export function Footer({ categories }: { categories: NavCategory[] }) {
         <div className="flex flex-col justify-between gap-3 text-sm text-muted-foreground sm:flex-row">
           <p>© {new Date().getFullYear()} store. All rights reserved.</p>
           <div className="flex gap-5">
-            <Link href="/privacy" className="hover:text-foreground">Privacy</Link>
-            <Link href="/terms" className="hover:text-foreground">Terms</Link>
+            <Link href="/privacy" className="hover:text-foreground">
+              Privacy
+            </Link>
+            <Link href="/terms" className="hover:text-foreground">
+              Terms
+            </Link>
           </div>
         </div>
       </div>

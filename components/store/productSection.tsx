@@ -1,4 +1,4 @@
-import { ProductCardData } from "@/services/home/home.service";
+import { ProductCardData } from "@/types/product.type";
 import { ProductCard } from "../products/productCard";
 import { SectionHeading } from "./sectionHeading";
 

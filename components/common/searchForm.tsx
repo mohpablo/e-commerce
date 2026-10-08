@@ -1,7 +1,16 @@
 import { Search } from "lucide-react";
-import { InputGroup, InputGroupInput, InputGroupAddon, InputGroupButton } from "../ui/input-group";
+import {
+  InputGroup,
+  InputGroupInput,
+  InputGroupAddon,
+  InputGroupButton,
+} from "../ui/input-group";
 
-export function SearchForm({ className }: { className?: string }) {
+type Props = {
+  className?: string;
+};
+
+export function SearchForm({ className }: Props) {
   return (
     <form action="/products" role="search" className={className}>
       <InputGroup className="h-10 rounded-full bg-muted/60">
