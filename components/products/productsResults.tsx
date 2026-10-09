@@ -20,7 +20,10 @@ export async function ProductsResults({ page, sort, q, category }: Props) {
       ...(sort !== undefined && { sort }),
     });
     if (q) params.set("q", q);
-    redirect(`/products?${params}`);
+    const pathname = category
+      ? `/categories/${encodeURIComponent(category)}`
+      : "/products";
+    redirect(`${pathname}?${params.toString()}`);
   }
 
   if (items.length === 0) {

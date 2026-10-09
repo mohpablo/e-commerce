@@ -1,7 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 
 import {
@@ -17,6 +17,7 @@ type Props = {
 
 export function SearchForm({ className }: Props) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -41,7 +42,7 @@ export function SearchForm({ className }: Props) {
     params.delete("page");
 
     startTransition(() => {
-      router.replace(`/products?${params.toString()}`, { scroll: false });
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     });
   };
 

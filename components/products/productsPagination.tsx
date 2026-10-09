@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   Pagination,
@@ -52,15 +52,19 @@ function getPageNumbers(currentPage: number, totalPages: number) {
 
 export function ProductsPagination({ page, totalPages, sort, q }: Props) {
   const router = useRouter();
+  const pathname = usePathname();
 
   if (totalPages <= 1) return null;
 
   const createHref = (p: number) => {
     const params = new URLSearchParams();
+
     if (sort) params.set("sort", sort);
     if (q) params.set("q", q);
+
     params.set("page", p.toString());
-    return `/products?${params.toString()}`;
+
+    return `${pathname}?${params.toString()}`;
   };
 
   const handleNavigate = (

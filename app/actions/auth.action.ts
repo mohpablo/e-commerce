@@ -26,7 +26,7 @@ export async function signupAction(
     return { errors: result.errors };
   }
 
-  return {};
+  redirect("/");
 }
 
 export type LoginState = {
@@ -46,7 +46,7 @@ export async function loginAction(
     return { errors: result.errors };
   }
 
-  return {};
+  redirect("/");
 }
 
 export async function logoutAction() {

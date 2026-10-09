@@ -61,7 +61,7 @@ export function ProductCard({ product }: Props) {
 
       <div className="mt-3 flex flex-1 flex-col gap-1 px-1">
         <Link
-          href={`/categories/${product.slug}`}
+          href={`/categories/${product.category.slug}`}
           className="text-xs text-muted-foreground hover:text-foreground"
         >
           {product.category.name}
