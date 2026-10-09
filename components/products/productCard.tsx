@@ -61,7 +61,7 @@ export function ProductCard({ product }: Props) {
 
       <div className="mt-3 flex flex-1 flex-col gap-1 px-1">
         <Link
-          href={`/categories/${product.category.slug}`}
+          href={`/categories/${product.slug}`}
           className="text-xs text-muted-foreground hover:text-foreground"
         >
           {product.category.name}
@@ -73,8 +73,9 @@ export function ProductCard({ product }: Props) {
           </h3>
         </Link>
 
-        <div className="mt-2 flex items-center justify-between">
-          <span className="font-semibold tabular-nums">
+
+        <div className="mt-2 flex items-center justify-between gap-2">
+          <span className="truncate text-sm font-semibold tabular-nums sm:text-base">
             {formatPrice(product.price.toNumber())}
           </span>
 
@@ -83,11 +84,14 @@ export function ProductCard({ product }: Props) {
             <Button
               type="submit"
               size="sm"
-              className="rounded-full"
+              className="h-8 rounded-full px-2.5 sm:h-9 sm:px-3"
               disabled={soldOut}
+              aria-label={soldOut ? "Sold out" : `Add ${product.name} to cart`}
             >
-              <Plus />
-              {soldOut ? "Sold out" : "Add"}
+              <Plus className="size-4 shrink-0" />
+              <span className="hidden sm:inline">
+                {soldOut ? "Sold out" : "Add"}
+              </span>
             </Button>
           </form>
         </div>

@@ -2,7 +2,7 @@
 
 import { Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useRef } from "react";
+import { useRef, useState, useTransition } from "react";
 
 import {
   InputGroup,
@@ -19,6 +19,15 @@ export function SearchForm({ className }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [isPending, startTransition] = useTransition();
+  const urlQuery = searchParams.get("q") ?? "";
+  const [query, setQuery] = useState(urlQuery);
+
+  const [prevUrlQuery, setPrevUrlQuery] = useState(urlQuery);
+  if (prevUrlQuery !== urlQuery) {
+    setPrevUrlQuery(urlQuery);
+    setQuery(urlQuery);
+  }
 
   const handleSearch = (term: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -29,42 +38,44 @@ export function SearchForm({ className }: Props) {
       params.delete("q");
     }
 
-    params.delete("page"); 
+    params.delete("page");
 
-    router.replace(`/products?${params.toString()}`, { scroll: false });
+    startTransition(() => {
+      router.replace(`/products?${params.toString()}`, { scroll: false });
+    });
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setQuery(value);
+
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
     timeoutRef.current = setTimeout(() => {
-      handleSearch(e.target.value);
+      handleSearch(value);
     }, 300);
   };
 
   const onSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault(); 
+    e.preventDefault();
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
-    const formData = new FormData(e.currentTarget);
-    handleSearch(formData.get("q") as string);
+    handleSearch(query);
   };
 
   return (
     <form onSubmit={onSubmit} role="search" className={className}>
       <InputGroup className="h-10 rounded-full bg-muted/60">
         <InputGroupInput
-          key={searchParams.get("q") ?? "empty"}
           name="q"
           type="search"
           placeholder="Search products"
           aria-label="Search products"
-          defaultValue={searchParams.get("q") ?? ""}
+          value={query}
           onChange={onChange}
         />
 
         <InputGroupAddon>
-          <Search />
+          <Search className={isPending ? "animate-pulse opacity-50" : ""} />
         </InputGroupAddon>
 
         <InputGroupAddon align="inline-end">
@@ -72,6 +83,7 @@ export function SearchForm({ className }: Props) {
             type="submit"
             variant="secondary"
             className="rounded-full"
+            disabled={isPending}
           >
             Search
           </InputGroupButton>
