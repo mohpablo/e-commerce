@@ -20,7 +20,7 @@ export function ProductCard({ product }: Props) {
     <article className="group flex flex-col">
       <Link
         href={`/products/${product.slug}`}
-        className="relative block aspect-[4/5] overflow-hidden rounded-2xl bg-muted"
+        className="relative block aspect-4/5 overflow-hidden rounded-2xl bg-muted"
       >
         {primary ? (
           <>

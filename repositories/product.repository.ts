@@ -1,5 +1,12 @@
 import { prisma } from "@/lib/prisma";
 
+const sortOrders = {
+  newest: { createdAt: "desc" },
+  "price-asc": { price: "asc" },
+  "price-desc": { price: "desc" },
+  "name-asc": { name: "asc" },
+} as const;
+
 export const productCardInclude = {
   category: { select: { id: true, name: true, slug: true } },
   images: {
@@ -25,5 +32,26 @@ export const productRepository = {
       orderBy: { orderItems: { _count: "desc" } },
       include: productCardInclude,
     });
+  },
+
+  async findPaginated(page: number, pageSize: number, sort = "newest", q = "") {
+    const orderBy = Object.hasOwn(sortOrders, sort)
+      ? sortOrders[sort as keyof typeof sortOrders]
+      : sortOrders.newest;
+
+    const where = q.trim() ? { name: { contains: q.trim() } } : {};
+
+    const [items, total] = await prisma.$transaction([
+      prisma.product.findMany({
+        where,
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        orderBy: [orderBy, { id: "asc" }],
+        include: productCardInclude,
+      }),
+      prisma.product.count({ where }),
+    ]);
+
+    return { items, total };
   },
 };

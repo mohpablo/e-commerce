@@ -18,7 +18,7 @@ import { MobileNav } from "./mobile-nav";
 import { User } from "better-auth/types";
 import { SearchForm } from "./searchForm";
 import { Category } from "@/types/category.type";
-
+import { Suspense } from "react";
 
 type Props = {
   categories: Category[];
@@ -79,8 +79,9 @@ export function Header({ categories, cartCount = 0, user }: Props) {
         </NavigationMenu>
 
         {/* Search */}
-        <SearchForm className="ml-auto hidden max-w-sm flex-1 md:block" />
-
+        <Suspense fallback={null}>
+          <SearchForm className="ml-auto hidden max-w-sm flex-1 md:block" />
+        </Suspense>
         {/* Right actions */}
         <div className="ml-auto flex items-center gap-1 md:ml-0">
           <ThemeToggle />
@@ -108,7 +109,9 @@ export function Header({ categories, cartCount = 0, user }: Props) {
 
       {/* Mobile search bar */}
       <div className="border-t px-4 py-2 md:hidden">
-        <SearchForm />
+        <Suspense fallback={null}>
+          <SearchForm />
+        </Suspense>
       </div>
     </header>
   );
