@@ -65,14 +65,6 @@ export function MobileNav({ categories, user }: Props) {
           >
             Shop all
           </SheetClose>
-          <SheetClose
-            nativeButton={false}
-            render={
-              <Link href="/products?sort=newest" className={mobileLink} />
-            }
-          >
-            New arrivals
-          </SheetClose>
 
           <Accordion>
             <AccordionItem value="categories" className="border-b-0">

@@ -4,13 +4,21 @@ import { ProductCard } from "./productCard";
 import { ProductsPagination } from "./productsPagination";
 import { redirect } from "next/navigation";
 
-type Props = { page: number; sort: string; q: string };
+type Props = { page: number; sort?: string; q: string; category?: string };
 
-export async function ProductsResults({ page, sort, q }: Props) {
-  const { items, total, totalPages } = await getProductsPage(page, sort, q);
+export async function ProductsResults({ page, sort, q, category }: Props) {
+  const { items, total, totalPages } = await getProductsPage({
+    page,
+    sort,
+    q,
+    category,
+  });
 
   if (page > totalPages) {
-    const params = new URLSearchParams({ page: String(totalPages), sort });
+    const params = new URLSearchParams({
+      page: String(totalPages),
+      ...(sort !== undefined && { sort }),
+    });
     if (q) params.set("q", q);
     redirect(`/products?${params}`);
   }

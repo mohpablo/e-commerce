@@ -10,12 +10,12 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"; 
+} from "@/components/ui/pagination";
 
 type Props = {
   page: number;
   totalPages: number;
-  sort: string;
+  sort?: string;
   q: string;
 };
 
@@ -55,7 +55,6 @@ export function ProductsPagination({ page, totalPages, sort, q }: Props) {
 
   if (totalPages <= 1) return null;
 
-
   const createHref = (p: number) => {
     const params = new URLSearchParams();
     if (sort) params.set("sort", sort);
@@ -77,7 +76,6 @@ export function ProductsPagination({ page, totalPages, sort, q }: Props) {
   return (
     <Pagination className="mt-12">
       <PaginationContent>
-        
         <PaginationItem>
           {page > 1 ? (
             <PaginationPrevious
@@ -92,7 +90,6 @@ export function ProductsPagination({ page, totalPages, sort, q }: Props) {
             />
           )}
         </PaginationItem>
-
 
         {pages.map((p, index) => (
           <PaginationItem key={typeof p === "number" ? p : `ellipsis-${index}`}>
@@ -109,7 +106,6 @@ export function ProductsPagination({ page, totalPages, sort, q }: Props) {
             )}
           </PaginationItem>
         ))}
-
 
         <PaginationItem>
           {page < totalPages ? (

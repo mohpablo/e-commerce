@@ -67,14 +67,6 @@ export function Header({ categories, cartCount = 0, user }: Props) {
               </NavigationMenuContent>
             </NavigationMenuItem>
 
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                render={<Link href="/products?sort=newest" />}
-                className={navigationMenuTriggerStyle()}
-              >
-                New arrivals
-              </NavigationMenuLink>
-            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
 

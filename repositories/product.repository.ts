@@ -34,12 +34,39 @@ export const productRepository = {
     });
   },
 
-  async findPaginated(page: number, pageSize: number, sort = "newest", q = "") {
+  async findPaginated({
+    page,
+    pageSize,
+    sort = "newest",
+    q = "",
+    category,
+  }: {
+    page: number;
+    pageSize: number;
+    sort?: string;
+    q?: string;
+    category?: string;
+  }) {
     const orderBy = Object.hasOwn(sortOrders, sort)
       ? sortOrders[sort as keyof typeof sortOrders]
       : sortOrders.newest;
 
-    const where = q.trim() ? { name: { contains: q.trim() } } : {};
+    const where = {
+      ...(q.trim()
+        ? {
+            name: {
+              contains: q.trim(),
+            },
+          }
+        : {}),
+      ...(category
+        ? {
+            category: {
+              slug: category,
+            },
+          }
+        : {}),
+    };
 
     const [items, total] = await prisma.$transaction([
       prisma.product.findMany({

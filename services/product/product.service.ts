@@ -8,14 +8,25 @@ export function getPopularProducts(take = 4) {
   return productRepository.findPopular(take);
 }
 
-export async function getProductsPage(page: number, sort?: string,q?: string) {
+export async function getProductsPage({
+  page,
+  category,
+  q,
+  sort,
+}: {
+  page: number;
+  sort?: string;
+  q?: string;
+  category?: string;
+}) {
   const productsPerPage = 12;
-  const { items, total } = await productRepository.findPaginated(
+  const { items, total } = await productRepository.findPaginated({
     page,
-    productsPerPage,
+    pageSize: productsPerPage,
     sort,
-    q
-  );
+    q,
+    category,
+  });
 
   return {
     items,
