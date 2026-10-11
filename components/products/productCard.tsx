@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Plus } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+
 import { formatPrice } from "../../lib/fromat";
 import { ProductCardData } from "@/types/product.type";
+import { ProductAddToCartButton } from "./productCardAddButton";
 
 type Props = {
   product: ProductCardData;
@@ -73,27 +73,16 @@ export function ProductCard({ product }: Props) {
           </h3>
         </Link>
 
-
-        <div className="mt-2 flex items-center justify-between gap-2">
+        <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
           <span className="truncate text-sm font-semibold tabular-nums sm:text-base">
             {formatPrice(product.price.toNumber())}
           </span>
 
-          <form>
-            <input type="hidden" name="productId" value={product.id} />
-            <Button
-              type="submit"
-              size="sm"
-              className="h-8 rounded-full px-2.5 sm:h-9 sm:px-3"
-              disabled={soldOut}
-              aria-label={soldOut ? "Sold out" : `Add ${product.name} to cart`}
-            >
-              <Plus className="size-4 shrink-0" />
-              <span className="hidden sm:inline">
-                {soldOut ? "Sold out" : "Add"}
-              </span>
-            </Button>
-          </form>
+          <ProductAddToCartButton
+            productId={product.id}
+            productName={product.name}
+            soldOut={soldOut}
+          />
         </div>
       </div>
     </article>

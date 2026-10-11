@@ -34,3 +34,7 @@ export async function getProductsPage({
     totalPages: Math.max(1, Math.ceil(total / productsPerPage)),
   };
 }
+
+export function getProductBySlug(slug: string) {
+  return productRepository.findBySlug(slug);
+}

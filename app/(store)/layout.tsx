@@ -4,17 +4,20 @@ import { Footer } from "@/components/common/footer";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { getCategories } from "@/services/category/category.service";
-
+import { getCartCount } from "@/services/cart/cart.service";
 
 export default async function StoreLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const categories = await getCategories();
   const session = await auth.api.getSession({ headers: await headers() });
   const user = session?.user ?? null;
-  const cartCount = 0;
+
+  const [categories, cartCount] = await Promise.all([
+    getCategories(),
+    user ? getCartCount(user.id) : Promise.resolve(0),
+  ]);
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">

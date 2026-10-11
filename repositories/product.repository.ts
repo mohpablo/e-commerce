@@ -16,6 +16,14 @@ export const productCardInclude = {
   },
 } as const;
 
+export const productDetailInclude = {
+  category: { select: { id: true, name: true, slug: true } },
+  images: {
+    orderBy: { position: "asc" as const },
+    select: { id: true, url: true, alt: true },
+  },
+} as const;
+
 export const productRepository = {
   async findNewest(take: number) {
     return prisma.product.findMany({
@@ -80,5 +88,19 @@ export const productRepository = {
     ]);
 
     return { items, total };
+  },
+
+  async findBySlug(slug: string) {
+    return prisma.product.findUnique({
+      where: { slug },
+      include: productDetailInclude,
+    });
+  },
+
+  async findStockById(id: string) {
+    return prisma.product.findUnique({
+      where: { id },
+      select: { id: true, name: true, stock: true },
+    });
   },
 };
