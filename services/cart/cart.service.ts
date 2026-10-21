@@ -154,6 +154,7 @@ export async function getCart(userId: string) {
         slug: item.product.slug,
         price,
         stock: item.product.stock,
+        description:item.product.description,
         image: item.product.images[0] ?? null,
       },
     };
@@ -166,12 +167,12 @@ export async function getCart(userId: string) {
   };
 }
 
-export async function getProductCartQuantity(
-  userId: string,
-  productId: string,
-) {
-  return cartRepository.findProductQuantity(userId, productId);
-}
+// export async function getProductCartQuantity(
+//   userId: string,
+//   productId: string,
+// ) {
+//   return cartRepository.findProductQuantity(userId, productId);
+// }
 
 export type CartData = Awaited<ReturnType<typeof getCart>>;
 export type CartLine = CartData["items"][number];

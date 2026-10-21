@@ -8,7 +8,6 @@ import { getProductBySlug } from "@/services/product/product.service";
 import { ProductGallery } from "@/components/products/productGallery";
 import { AddToCartButton } from "@/components/cart/addToCartButton";
 
-
 function getStockStatus(stock: number) {
   if (stock <= 0) return { label: "Out of stock", tone: "text-destructive" };
   if (stock <= 5)
@@ -16,7 +15,9 @@ function getStockStatus(stock: number) {
   return { label: "In stock", tone: "text-emerald-600" };
 }
 
-export default async function ProductPage({ params }: PageProps<"/products/[slug]">) {
+export default async function ProductPage({
+  params,
+}: PageProps<"/products/[slug]">) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
 

@@ -23,6 +23,7 @@ export const cartRepository = {
                 slug: true,
                 price: true,
                 stock: true,
+                description:true,
                 images: {
                   orderBy: { position: "asc" },
                   take: 1,

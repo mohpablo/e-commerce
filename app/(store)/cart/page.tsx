@@ -2,7 +2,6 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/fromat";
-
 import { getCart } from "@/services/cart/cart.service";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
