@@ -34,7 +34,7 @@ export function CategoryGrid({ categories }: Props) {
 
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <SectionHeading title="Shop by category" href="/categories" />
+      <SectionHeading title="Shop by category" href="/products" />
 
       <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-6">
         {categories.map((category) => {
