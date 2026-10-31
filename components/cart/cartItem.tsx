@@ -7,8 +7,8 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/fromat";
-import { CartLine } from "@/services/cart/cart.service";
 import { removeCartItemAction, updateCartItemAction } from "@/app/actions/cart.actions";
+import { CartLine } from "@/types/cart.type";
 
 function getFirstError(errors?: Record<string, string[]>): string | undefined {
   if (!errors) return undefined;
