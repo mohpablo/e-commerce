@@ -1,16 +1,26 @@
 import { NextResponse } from "next/server";
 import { PaymobWebhookPayload } from "@/types/payment.type";
 import { verifyPaymobHmac } from "@/services/payment/payment.service";
-import { orderRepository } from "@/repositories/order.repository"; 
+import { orderRepository } from "@/repositories/order.repository";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
+  console.log("WEBHOOK HIT");
+
   try {
     const body: PaymobWebhookPayload = await req.json();
 
     const transaction = body.obj;
-    const receivedHmac = body.hmac;
+    // Paymob sends the HMAC in the URL (?hmac=...), not in the JSON body
+    const receivedHmac = new URL(req.url).searchParams.get("hmac");
 
     if (!transaction || !receivedHmac) {
+      console.error("WEBHOOK 400: missing obj or hmac", {
+        hasObj: Boolean(transaction),
+        hasHmac: Boolean(receivedHmac),
+      });
       return NextResponse.json(
         { error: "Invalid payload format" },
         { status: 400 },
@@ -20,6 +30,7 @@ export async function POST(req: Request) {
     const verified = await verifyPaymobHmac(transaction, receivedHmac);
 
     if (!verified) {
+      console.error("WEBHOOK 401: HMAC mismatch");
       return NextResponse.json(
         { error: "Invalid HMAC signature" },
         { status: 401 },
@@ -46,9 +57,16 @@ export async function POST(req: Request) {
       paymobOrderId = String(transaction.order);
     }
 
+    console.log("WEBHOOK parsed", {
+      paymobTransactionId,
+      paymobOrderId,
+      localOrderId,
+      isSuccess,
+    });
+
     if (!localOrderId) {
       console.error(
-        `Missing merchant_order_id for Paymob transaction: ${paymobTransactionId}`,
+        `WEBHOOK 400: missing merchant_order_id for transaction ${paymobTransactionId}`,
       );
       return NextResponse.json(
         { status: "Missing merchant order ID" },
@@ -60,12 +78,13 @@ export async function POST(req: Request) {
 
     if (!order) {
       console.error(
-        `Order not found for Paymob transaction: ${paymobTransactionId}`,
+        `WEBHOOK 404: order ${localOrderId} not found (transaction ${paymobTransactionId})`,
       );
       return NextResponse.json({ status: "Order not found" }, { status: 404 });
     }
 
     if (order.status !== "PENDING") {
+      console.log(`WEBHOOK: order ${order.id} already ${order.status}`);
       return NextResponse.json(
         { status: "Already processed" },
         { status: 200 },
@@ -90,6 +109,7 @@ export async function POST(req: Request) {
           maskedPan: transaction.source_data?.pan,
         },
       );
+      console.log(`WEBHOOK: order ${order.id} -> PROCESSING`);
     } else {
       await orderRepository.updateStatusAndCreatePayment(
         order.id,
@@ -102,11 +122,12 @@ export async function POST(req: Request) {
           status: "FAILED",
         },
       );
+      console.log(`WEBHOOK: order ${order.id} -> CANCELLED`);
     }
 
     return NextResponse.json({ status: "success" }, { status: 200 });
   } catch (error) {
-    console.error("Webhook error:", error);
+    console.error("WEBHOOK 500:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },
