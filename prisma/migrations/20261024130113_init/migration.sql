@@ -143,7 +143,6 @@ CREATE TABLE `Order` (
     `shippingPhone` VARCHAR(191) NOT NULL,
     `shippingAddress` TEXT NOT NULL,
     `shippingCity` VARCHAR(191) NOT NULL,
-    `shippingCountry` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -164,6 +163,27 @@ CREATE TABLE `OrderItem` (
 
     INDEX `OrderItem_orderId_idx`(`orderId`),
     INDEX `OrderItem_productId_idx`(`productId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Payment` (
+    `id` VARCHAR(191) NOT NULL,
+    `orderId` VARCHAR(191) NOT NULL,
+    `paymobTransactionId` VARCHAR(191) NOT NULL,
+    `paymobOrderId` VARCHAR(191) NOT NULL,
+    `amountCents` INTEGER NOT NULL,
+    `currency` VARCHAR(191) NOT NULL DEFAULT 'EGP',
+    `status` ENUM('PENDING', 'SUCCESS', 'FAILED', 'REFUNDED') NOT NULL DEFAULT 'PENDING',
+    `paymentMethod` VARCHAR(191) NULL,
+    `cardSubType` VARCHAR(191) NULL,
+    `maskedPan` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `Payment_paymobTransactionId_key`(`paymobTransactionId`),
+    INDEX `Payment_orderId_idx`(`orderId`),
+    INDEX `Payment_paymobTransactionId_idx`(`paymobTransactionId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -196,3 +216,6 @@ ALTER TABLE `OrderItem` ADD CONSTRAINT `OrderItem_orderId_fkey` FOREIGN KEY (`or
 
 -- AddForeignKey
 ALTER TABLE `OrderItem` ADD CONSTRAINT `OrderItem_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Payment` ADD CONSTRAINT `Payment_orderId_fkey` FOREIGN KEY (`orderId`) REFERENCES `Order`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

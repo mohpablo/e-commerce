@@ -134,3 +134,73 @@ export type PaymobRedirectCallbackParams = {
   txn_response_code: string;
   hmac: string;
 };
+
+export type PaymobWebhookPayload = {
+  type: string;
+  hmac: string;
+  obj: PaymobTransactionObject;
+};
+
+export type PaymobTransactionObject = {
+  id: number;
+  pending: boolean;
+  amount_cents: number;
+  success: boolean;
+  is_auth: boolean;
+  is_capture: boolean;
+  is_standalone_payment: boolean;
+  is_voided: boolean;
+  is_refunded: boolean;
+  is_3d_secure: boolean;
+  integration_id: number;
+  profile_id?: number;
+  has_parent_transaction: boolean;
+  order:
+    | number
+    | {
+        id: number;
+        created_at?: string;
+        amount_cents?: number;
+        currency?: string;
+        [key: string]: unknown;
+      };
+  created_at: string;
+  currency: string;
+  error_occured: boolean;
+  owner: number;
+  source_data: {
+    type: string;
+    pan: string;
+    sub_type: string;
+    [key: string]: unknown;
+  };
+  merchant_commission?: number;
+  accept_fees?: number;
+  data?: {
+    message?: string;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+};
+
+export const hmacKeys = [
+  "amount_cents",
+  "created_at",
+  "currency",
+  "error_occured",
+  "has_parent_transaction",
+  "id",
+  "integration_id",
+  "is_3d_secure",
+  "is_auth",
+  "is_capture",
+  "is_refunded",
+  "is_standalone_payment",
+  "is_voided",
+  "order",
+  "owner",
+  "pending",
+  "source_data.pan",
+  "source_data.sub_type",
+  "source_data.type",
+] as const;

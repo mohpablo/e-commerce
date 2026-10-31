@@ -212,8 +212,9 @@ model Order {
   shippingAddress String @db.Text
   shippingCity    String
 
-
   items OrderItem[]
+
+  payments Payment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -245,6 +246,33 @@ model OrderItem {
 }
 
 // =========================
+// Payment
+// =========================
+
+model Payment {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  paymobTransactionId String @unique // 
+  paymobOrderId       String
+
+  amountCents Int
+  currency    String        @default("EGP")
+  status      PaymentStatus @default(PENDING)
+
+  paymentMethod String?
+  cardSubType   String?
+  maskedPan     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([paymobTransactionId])
+}
+
+// =========================
 // Enums
 // =========================
 
@@ -256,4 +284,9 @@ enum OrderStatus {
   CANCELLED
 }
 
-
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}

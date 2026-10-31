@@ -167,12 +167,4 @@ export async function getCart(userId: string) {
   };
 }
 
-// export async function getProductCartQuantity(
-//   userId: string,
-//   productId: string,
-// ) {
-//   return cartRepository.findProductQuantity(userId, productId);
-// }
 
-export type CartData = Awaited<ReturnType<typeof getCart>>;
-export type CartLine = CartData["items"][number];

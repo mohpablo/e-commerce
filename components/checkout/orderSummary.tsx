@@ -1,27 +1,14 @@
 import { CheckCircle2, LockKeyhole, Package, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/fromat";
+import { CartData } from "@/types/cart.type";
 
-interface OrderItem {
-  id: string;
-  quantity: number;
-  product: {
-    name: string;
-    price: number;
-  };
-}
-
-interface Cart {
-  itemCount: number;
-  items: OrderItem[];
-}
-
-interface OrderSummaryProps {
-  cart: Cart;
+type OrderSummaryProps = {
+  cart: CartData;
   subtotal: number;
   tax: number;
   total: number;
-}
+};
 
 export default function OrderSummary({
   cart,
@@ -40,7 +27,7 @@ export default function OrderSummary({
 
       <div className="p-5 sm:p-7 space-y-6">
         {/* Cart Items List */}
-        <div className="space-y-4 max-h-64 overflow-y-auto pr-1">
+        <div className="space-y-4 max-h-64 overflow-y-auto pt-3 pr-1">
           {cart.items.map((item) => (
             <div key={item.id} className="flex gap-4 items-center">
               <div className="relative flex size-16 shrink-0 items-center justify-center rounded-xl bg-muted">
@@ -96,7 +83,7 @@ export default function OrderSummary({
           </p>
         </div>
 
-        {/* Place Order Button (tied to the form via form="checkout-form") */}
+        {/* Place Order Button */}
         <Button
           type="submit"
           form="checkout-form"

@@ -4,6 +4,8 @@ import { getCart } from "../cart/cart.service";
 import { CreateIntention } from "../payment/payment.service";
 import { ServiceResult } from "@/types/ServiceResult";
 import { User } from "better-auth";
+import { cartRepository } from "@/repositories/cart.repository";
+import { createOrder } from "../order/order.service";
 
 export async function checkout(
   input: CheckoutInput,
@@ -20,10 +22,39 @@ export async function checkout(
 
   const cart = await getCart(user.id);
 
+  if (!cart || cart.items.length === 0) {
+    return {
+      success: false,
+      errors: {
+        _form: ["Your cart is empty."],
+      },
+    };
+  }
+
   const tax = Number((cart.subtotal * 0.08).toFixed(2));
   const shipping = 0;
   const total = cart.subtotal + tax + shipping;
   const totalInCents = Math.round(total * 100);
+
+  const order = await createOrder(
+    user,
+    result.data,
+    cart,
+    tax,
+    shipping,
+    total,
+  );
+
+  if (!order) {
+    return {
+      success: false,
+      errors: {
+        _form: ["Failed to create order. Please try again."],
+      },
+    };
+  }
+
+  await cartRepository.clearCart(user.id);
 
   const paymobItems = [
     ...cart.items.map((item) => ({
@@ -57,6 +88,7 @@ export async function checkout(
     },
     items: paymobItems,
     redirection_url: "http://localhost:3000/checkout/result",
+    notification_url: "http://localhost:3000/api/webhooks/paymob",
   });
 
   if (!res?.client_secret) {

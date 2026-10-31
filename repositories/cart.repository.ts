@@ -23,7 +23,7 @@ export const cartRepository = {
                 slug: true,
                 price: true,
                 stock: true,
-                description:true,
+                description: true,
                 images: {
                   orderBy: { position: "asc" },
                   take: 1,
@@ -89,5 +89,15 @@ export const cartRepository = {
       select: { quantity: true },
     });
     return item?.quantity ?? 0;
+  },
+
+  async clearCart(userId: string) {
+    return prisma.cartItem.deleteMany({
+      where: {
+        cart: {
+          userId,
+        },
+      },
+    });
   },
 };

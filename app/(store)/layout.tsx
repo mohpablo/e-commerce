@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { getCategories } from "@/services/category/category.service";
 import { getCartCount } from "@/services/cart/cart.service";
+import GlobalGlowCursor from "@/components/GlobalGlowCursor";
 
 export default async function StoreLayout({
   children,

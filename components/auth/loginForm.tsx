@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import Link from "next/link";
 
 import { loginAction, signInWithGoogleAction } from "@/app/actions/auth.action";
+import { PasswordEyeInput } from "@/components/auth/passwordEyeInput";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -107,29 +108,28 @@ export function LoginForm() {
             )}
           </div>
 
-          {/* Password */}
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+{/* Password */}
+<div className="space-y-2">
+  <Label htmlFor="password">Password</Label>
 
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="••••••••"
-              autoComplete="current-password"
-              disabled={isPending}
-              aria-invalid={!!state?.errors?.password}
-              aria-describedby={
-                state?.errors?.password ? "password-error" : undefined
-              }
-            />
+  <PasswordEyeInput
+    id="password"
+    name="password"
+    placeholder="••••••••"
+    autoComplete="current-password"
+    disabled={isPending}
+    aria-invalid={!!state?.errors?.password}
+    aria-describedby={
+      state?.errors?.password ? "password-error" : undefined
+    }
+  />
 
-            {state?.errors?.password?.[0] && (
-              <p id="password-error" className="text-destructive text-sm">
-                {state.errors.password[0]}
-              </p>
-            )}
-          </div>
+  {state?.errors?.password?.[0] && (
+    <p id="password-error" className="text-destructive text-sm">
+      {state.errors.password[0]}
+    </p>
+  )}
+</div>
 
           {/* General error */}
           {state?.errors?._form?.[0] && (

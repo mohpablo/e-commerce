@@ -1,31 +1,35 @@
-import z from "zod";
-import { CreateOrderInput, createOrderSchema } from "./order.validation";
-import { ServiceResult } from "@/types/ServiceResult";
-import { OrderWithItems } from "@/types/order.type";
 import { orderRepository } from "@/repositories/order.repository";
+import { User } from "better-auth";
+import { CheckoutInput } from "../checkout/checkout.validation";
+import { CartData } from "@/types/cart.type";
 
 export async function createOrder(
-  input: CreateOrderInput,
-): Promise<ServiceResult<OrderWithItems>> {
-  const result = createOrderSchema.safeParse(input);
-
-  if (!result.success) {
-    return {
-      success: false,
-      errors: z.flattenError(result.error).fieldErrors,
-    };
-  }
-  const { items, ...orderData } = result.data;
-
-  const order = await orderRepository.create({
-    ...orderData,
+  user: User,
+  checkoutData: CheckoutInput,
+  cart: CartData,
+  tax: number,
+  shipping: number,
+  total: number,
+) {
+  return await orderRepository.create({
+    userId: user.id,
+    status: "PENDING",
+    subtotal: cart.subtotal,
+    shippingCost: shipping,
+    total: total,
+    shippingName: user.name || "Customer",
+    shippingEmail: user.email,
+    shippingPhone: checkoutData.phone,
+    shippingAddress: checkoutData.address,
+    shippingCity: checkoutData.city,
     items: {
-      create: items,
+      create: cart.items.map((item) => ({
+        productId: item.product.id,
+        productName: item.product.name,
+        unitPrice: item.product.price,
+        quantity: item.quantity,
+        subtotal: item.product.price * item.quantity,
+      })),
     },
   });
-
-  return {
-    success: true,
-    data: order,
-  };
 }

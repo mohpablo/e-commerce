@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { OrderStatus } from "@/lib/generated/prisma/enums";
+import { OrderStatus, PaymentStatus } from "@/lib/generated/prisma/enums";
 import { CreateOrderData } from "@/types/order.type";
 
 export const orderRepository = {
@@ -36,5 +36,34 @@ export const orderRepository = {
       where: { id },
       data: { status: OrderStatus.CANCELLED },
     });
+  },
+
+
+  async updateStatusAndCreatePayment(
+    orderId: string,
+    orderStatus: OrderStatus,
+    paymentData: {
+      paymobTransactionId: string;
+      paymobOrderId: string;
+      amountCents: number;
+      currency: string;
+      status: PaymentStatus;
+      paymentMethod?: string;
+      cardSubType?: string;
+      maskedPan?: string;
+    },
+  ) {
+    return prisma.$transaction([
+      prisma.order.update({
+        where: { id: orderId },
+        data: { status: orderStatus },
+      }),
+      prisma.payment.create({
+        data: {
+          orderId,
+          ...paymentData,
+        },
+      }),
+    ]);
   },
 };

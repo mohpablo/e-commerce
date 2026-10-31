@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import Link from "next/link";
 
 import { signInWithGoogleAction, signupAction } from "@/app/actions/auth.action";
+import { PasswordEyeInput } from "@/components/auth/passwordEyeInput";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -128,58 +129,58 @@ export function SignupForm() {
             )}
           </div>
 
-          {/* Password */}
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+          
+{/* Password */}
+<div className="space-y-2">
+  <Label htmlFor="password">Password</Label>
 
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="••••••••"
-              autoComplete="new-password"
-              disabled={isPending}
-              aria-invalid={!!state?.errors?.password}
-              aria-describedby={
-                state?.errors?.password ? "password-error" : undefined
-              }
-            />
+  <PasswordEyeInput
+    id="password"
+    name="password"
+    placeholder="••••••••"
+    autoComplete="new-password"
+    disabled={isPending}
+    aria-invalid={!!state?.errors?.password}
+    aria-describedby={
+      state?.errors?.password ? "password-error" : undefined
+    }
+  />
 
-            {state?.errors?.password?.[0] && (
-              <p id="password-error" className="text-sm text-destructive">
-                {state.errors.password[0]}
-              </p>
-            )}
-          </div>
+  {state?.errors?.password?.[0] && (
+    <p id="password-error" className="text-sm text-destructive">
+      {state.errors.password[0]}
+    </p>
+  )}
+</div>
 
-          {/* Confirm password */}
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm password</Label>
+{/* Confirm password */}
+<div className="space-y-2">
+  <Label htmlFor="confirmPassword">Confirm password</Label>
 
-            <Input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              placeholder="••••••••"
-              autoComplete="new-password"
-              disabled={isPending}
-              aria-invalid={!!state?.errors?.confirmPassword}
-              aria-describedby={
-                state?.errors?.confirmPassword
-                  ? "confirm-password-error"
-                  : undefined
-              }
-            />
+  <PasswordEyeInput
+    id="confirmPassword"
+    name="confirmPassword"
+    placeholder="••••••••"
+    autoComplete="new-password"
+    disabled={isPending}
+    aria-invalid={!!state?.errors?.confirmPassword}
+    aria-describedby={
+      state?.errors?.confirmPassword
+        ? "confirm-password-error"
+        : undefined
+    }
+  />
 
-            {state?.errors?.confirmPassword?.[0] && (
-              <p
-                id="confirm-password-error"
-                className="text-sm text-destructive"
-              >
-                {state.errors.confirmPassword[0]}
-              </p>
-            )}
-          </div>
+  {state?.errors?.confirmPassword?.[0] && (
+    <p
+      id="confirm-password-error"
+      className="text-sm text-destructive"
+    >
+      {state.errors.confirmPassword[0]}
+    </p>
+  )}
+</div>
+
 
           {/* General error */}
           {state?.errors?._form?.[0] && (
