@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
 }
 
 // =========================
@@ -13,10 +13,10 @@ datasource db {
 
 model User {
   id            String  @id
-  name          String  @db.Text
+  name          String
   email         String
   emailVerified Boolean @default(false)
-  image         String? @db.Text
+  image         String?
 
   role UserRole @default(USER)
 
@@ -39,49 +39,49 @@ model Session {
   token     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  ipAddress String?  @db.Text
-  userAgent String?  @db.Text
+  ipAddress String?
+  userAgent String?
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([token])
-  @@index([userId(length: 191)])
+  @@index([userId])
   @@map("session")
 }
 
 model Account {
   id         String @id
-  accountId  String @db.Text
-  providerId String @db.Text
+  accountId  String
+  providerId String
   userId     String
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  accessToken           String?   @db.Text
-  refreshToken          String?   @db.Text
-  idToken               String?   @db.Text
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
-  scope                 String?   @db.Text
-  password              String?   @db.Text
+  scope                 String?
+  password              String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([userId(length: 191)])
+  @@index([userId])
   @@map("account")
 }
 
 model Verification {
   id         String   @id
-  identifier String   @db.Text
-  value      String   @db.Text
+  identifier String
+  value      String
   expiresAt  DateTime
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  @@index([identifier(length: 191)])
+  @@index([identifier])
   @@map("verification")
 }
 
@@ -102,7 +102,7 @@ model Category {
   id          String  @id @default(cuid())
   name        String
   slug        String  @unique
-  description String? @db.Text
+  description String?
 
   products Product[]
 
@@ -118,7 +118,7 @@ model Product {
   id          String  @id @default(cuid())
   name        String
   slug        String  @unique
-  description String? @db.Text
+  description String?
   price       Decimal @db.Decimal(10, 2)
   stock       Int     @default(0)
 
@@ -141,8 +141,8 @@ model Product {
 
 model ProductImage {
   id       String  @id @default(cuid())
-  url      String  @db.Text
-  alt      String? @db.Text
+  url      String
+  alt      String?
   position Int     @default(0)
 
   productId String
@@ -209,11 +209,10 @@ model Order {
   shippingName    String
   shippingEmail   String
   shippingPhone   String
-  shippingAddress String @db.Text
+  shippingAddress String
   shippingCity    String
 
-  items OrderItem[]
-
+  items    OrderItem[]
   payments Payment[]
 
   createdAt DateTime @default(now())
@@ -254,7 +253,7 @@ model Payment {
   orderId String
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
-  paymobTransactionId String @unique // 
+  paymobTransactionId String @unique
   paymobOrderId       String
 
   amountCents Int
@@ -269,7 +268,6 @@ model Payment {
   updatedAt DateTime @updatedAt
 
   @@index([orderId])
-  @@index([paymobTransactionId])
 }
 
 // =========================
