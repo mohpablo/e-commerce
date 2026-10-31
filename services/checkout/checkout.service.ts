@@ -87,8 +87,8 @@ export async function checkout(
       country: "EGY",
     },
     items: paymobItems,
-    redirection_url: "http://localhost:3000/checkout/result",
-    notification_url: "http://localhost:3000/api/webhooks/paymob",
+    redirection_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/result`,
+    notification_url: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/paymob`,
   });
 
   if (!res?.client_secret) {
