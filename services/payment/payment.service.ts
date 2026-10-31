@@ -16,25 +16,45 @@ const HMAC_SECRET = process.env.PAYMOB_HMAC_SECRET!;
 export async function CreateIntention(
   createIntentionRequest: Omit<CreateIntentionRequest, "payment_methods">,
 ): Promise<CreateIntentionResponse> {
+  const body = {
+    ...createIntentionRequest,
+    payment_methods: [INTEGRATION_ID],
+  };
+
+  // ---- DEBUG: request ----
+  console.log("[paymob] URL:", `${BASE_URL}/v1/intention/`);
+  console.log(
+    "[paymob] key loaded:",
+    Boolean(KEY),
+    "| integration id:",
+    INTEGRATION_ID,
+  );
+  console.log("[paymob] request body:", JSON.stringify(body, null, 2));
+
   const response = await fetch(`${BASE_URL}/v1/intention/`, {
     method: "POST",
     headers: {
-      Authorization: `"token"  ${KEY}`,
+      Authorization: `Token ${KEY}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      ...createIntentionRequest,
-      payment_methods: [INTEGRATION_ID],
-    }),
+    body: JSON.stringify(body),
   });
 
+  const responseText = await response.text();
+
+  // ---- DEBUG: response ----
+  console.log("[paymob] response status:", response.status);
+  console.log(
+    "[paymob] response body:",
+    responseText.replace(/"client_secret":"[^"]*"/g, '"client_secret":"***"'),
+  );
+
   if (!response.ok) {
-    const errorText = await response.text();
-    console.error("Paymob API Error:", errorText);
-    throw new Error(`Paymob error: ${errorText}`);
+    console.error("[paymob] API error:", responseText);
+    throw new Error(`Paymob error (${response.status}): ${responseText}`);
   }
 
-  return response.json();
+  return JSON.parse(responseText) as CreateIntentionResponse;
 }
 
 export async function verifyPaymobHmac(
