@@ -33,7 +33,7 @@ export async function CreateIntention(
     console.error("Paymob API Error:", errorText);
     throw new Error(`Paymob error: ${errorText}`);
   }
-    
+
   return response.json();
 }
 
@@ -44,21 +44,13 @@ export async function verifyPaymobHmac(
   let concatenatedString = "";
 
   for (const key of hmacKeys) {
-    let value: unknown;
-    if (key === "order") {
-      const orderField = transaction.order;
-      value =
-        typeof orderField === "object" && orderField !== null
-          ? orderField.id
-          : orderField;
-    } else if (key.startsWith("source_data.")) {
-      const subKey = key.split(
-        ".",
-      )[1] as keyof PaymobTransactionObject["source_data"];
-      value = transaction.source_data[subKey];
-    } else {
-      value = transaction[key as keyof PaymobTransactionObject];
-    }
+    const value = key.split(".").reduce<unknown>((obj, part) => {
+      if (obj === null || obj === undefined || typeof obj !== "object") {
+        return undefined;
+      }
+
+      return (obj as Record<string, unknown>)[part];
+    }, transaction);
 
     concatenatedString +=
       value !== undefined && value !== null ? String(value) : "";
@@ -69,12 +61,15 @@ export async function verifyPaymobHmac(
     .update(concatenatedString)
     .digest("hex");
 
-  const bufCalculated = Buffer.from(calculatedHmac, "utf8");
-  const bufReceived = Buffer.from(receivedHmac, "utf8");
+  const calculatedBuffer = Buffer.from(calculatedHmac, "hex");
+  const receivedBuffer = Buffer.from(receivedHmac, "hex");
 
-  if (bufCalculated.length !== bufReceived.length) {
+  if (
+    receivedHmac.length !== 128 ||
+    calculatedBuffer.length !== receivedBuffer.length
+  ) {
     return false;
   }
 
-  return crypto.timingSafeEqual(bufCalculated, bufReceived);
+  return crypto.timingSafeEqual(calculatedBuffer, receivedBuffer);
 }
