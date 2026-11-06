@@ -78,6 +78,7 @@ export async function checkout(
   const res = await CreateIntention({
     amount: totalInCents,
     currency: "EGP",
+    special_reference: order.id,
     billing_data: {
       email: user.email,
       first_name: user.name?.split(" ")[0] || "Customer",
