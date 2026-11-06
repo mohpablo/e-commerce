@@ -197,10 +197,11 @@ export const hmacKeys = [
   "is_refunded",
   "is_standalone_payment",
   "is_voided",
-  "order",
+  "order.id",
   "owner",
   "pending",
   "source_data.pan",
   "source_data.sub_type",
   "source_data.type",
+  "success",
 ] as const;
