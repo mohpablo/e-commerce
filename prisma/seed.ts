@@ -1,7 +1,6 @@
 import { prisma } from "../lib/prisma";
 
-const image = (url: string) =>
-  `${url}?auto=format&fit=crop&w=1200&q=80`;
+const image = (url: string) => `${url}?auto=format&fit=crop&w=1200&q=80`;
 
 const categories = [
   {
@@ -13,8 +12,7 @@ const categories = [
   {
     name: "Clothing",
     slug: "clothing",
-    description:
-      "Modern everyday clothing designed for comfort and style.",
+    description: "Modern everyday clothing designed for comfort and style.",
   },
   {
     name: "Footwear",
@@ -31,14 +29,12 @@ const categories = [
   {
     name: "Accessories",
     slug: "accessories",
-    description:
-      "Practical and stylish accessories for everyday life.",
+    description: "Practical and stylish accessories for everyday life.",
   },
   {
     name: "Beauty",
     slug: "beauty",
-    description:
-      "Simple skincare and self-care essentials.",
+    description: "Simple skincare and self-care essentials.",
   },
   {
     name: "Sports & Fitness",
@@ -199,8 +195,7 @@ const products = [
   {
     name: "Canvas Low Tops",
     slug: "canvas-low-tops",
-    description:
-      "Simple canvas sneakers with a timeless low-top profile.",
+    description: "Simple canvas sneakers with a timeless low-top profile.",
     price: "54.99",
     stock: 61,
     categorySlug: "footwear",
@@ -427,6 +422,19 @@ const products = [
 ];
 
 async function main() {
+  await prisma.payment.deleteMany();
+  await prisma.orderItem.deleteMany();
+  await prisma.order.deleteMany();
+
+  await prisma.cartItem.deleteMany();
+  await prisma.cart.deleteMany();
+
+  await prisma.productImage.deleteMany();
+  await prisma.product.deleteMany();
+  await prisma.category.deleteMany();
+
+  console.log("🗑️ Existing data cleared");
+
   console.log("🌱 Starting database seed...");
 
   // ---------------------------------------------------------
@@ -532,4 +540,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
-
