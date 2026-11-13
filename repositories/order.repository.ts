@@ -17,28 +17,6 @@ export const orderRepository = {
     });
   },
 
-  findByIdForUser(id: string, userId: string) {
-    return prisma.order.findFirst({
-      where: { id, userId },
-      include: { items: true },
-    });
-  },
-
-  updateStatus(id: string, status: OrderStatus) {
-    return prisma.order.update({
-      where: { id },
-      data: { status },
-    });
-  },
-
-  cancel(id: string) {
-    return prisma.order.update({
-      where: { id },
-      data: { status: OrderStatus.CANCELLED },
-    });
-  },
-
-
   async updateStatusAndCreatePayment(
     orderId: string,
     orderStatus: OrderStatus,

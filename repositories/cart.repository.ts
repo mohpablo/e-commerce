@@ -83,14 +83,6 @@ export const cartRepository = {
     });
   },
 
-  async findProductQuantity(userId: string, productId: string) {
-    const item = await prisma.cartItem.findFirst({
-      where: { productId, cart: { userId } },
-      select: { quantity: true },
-    });
-    return item?.quantity ?? 0;
-  },
-
   async clearCart(userId: string) {
     return prisma.cartItem.deleteMany({
       where: {
