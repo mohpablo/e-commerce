@@ -100,9 +100,9 @@ export function Header({ categories, cartCount = 0, user }: Props) {
       </div>
 
       {/* Mobile search bar */}
-      <div className="border-t px-4 py-2 md:hidden">
+      <div className="border-t bg-background/80 px-4 py-2 md:hidden">
         <Suspense fallback={null}>
-          <SearchForm />
+          <SearchForm variant="compact" className="w-full" />
         </Suspense>
       </div>
     </header>

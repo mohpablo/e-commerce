@@ -33,7 +33,10 @@ export function CategoryGrid({ categories }: Props) {
   if (categories.length === 0) return null;
 
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <section
+      id="categories"
+      className="mx-auto w-full max-w-7xl scroll-mt-24 px-4 py-12 sm:px-6 lg:px-8"
+    >
       <SectionHeading title="Shop by category" href="/products" />
 
       <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-6">

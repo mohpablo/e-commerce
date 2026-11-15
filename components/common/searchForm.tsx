@@ -1,21 +1,17 @@
 "use client";
 
-import { Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 
-import {
-  InputGroup,
-  InputGroupInput,
-  InputGroupAddon,
-  InputGroupButton,
-} from "../ui/input-group";
+import GooeySearch from "@/components/originkit/ui/gooey-search";
+
 
 type Props = {
   className?: string;
+  variant?: "animated" | "compact";
 };
 
-export function SearchForm({ className }: Props) {
+export function SearchForm({ className, variant = "animated" }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -32,6 +28,10 @@ export function SearchForm({ className }: Props) {
 
   const handleSearch = (term: string) => {
     const params = new URLSearchParams(searchParams.toString());
+    const targetPath =
+      pathname === "/products" || pathname.startsWith("/categories/")
+        ? pathname
+        : "/products";
 
     if (term.trim()) {
       params.set("q", term.trim());
@@ -42,12 +42,11 @@ export function SearchForm({ className }: Props) {
     params.delete("page");
 
     startTransition(() => {
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      router.replace(`${targetPath}?${params.toString()}`, { scroll: false });
     });
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const onChange = (value: string) => {
     setQuery(value);
 
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -57,39 +56,30 @@ export function SearchForm({ className }: Props) {
     }, 300);
   };
 
-  const onSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = (term: string) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    handleSearch(query);
+    handleSearch(term);
   };
 
+
+
   return (
-    <form onSubmit={onSubmit} role="search" className={className}>
-      <InputGroup className="h-10 rounded-full bg-muted/60">
-        <InputGroupInput
-          name="q"
-          type="search"
-          placeholder="Search products"
-          aria-label="Search products"
-          value={query}
-          onChange={onChange}
-        />
-
-        <InputGroupAddon>
-          <Search className={isPending ? "animate-pulse opacity-50" : ""} />
-        </InputGroupAddon>
-
-        <InputGroupAddon align="inline-end">
-          <InputGroupButton
-            type="submit"
-            variant="secondary"
-            className="rounded-full"
-            disabled={isPending}
-          >
-            Search
-          </InputGroupButton>
-        </InputGroupAddon>
-      </InputGroup>
-    </form>
+    <div role="search" aria-busy={isPending} className={className}>
+      <GooeySearch
+        placeholder="Search products"
+        value={query}
+        onChange={onChange}
+        onSubmit={onSubmit}
+        width={400}
+        barHeight={64}
+        scale={64}
+        fill="var(--background)"
+        borderColor="var(--border)"
+        iconColor="var(--foreground)"
+        textColor="var(--foreground)"
+        placeholderColor="var(--muted-foreground)"
+        style={{ height: "67px" }}
+      />
+    </div>
   );
 }
