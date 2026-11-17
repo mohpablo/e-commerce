@@ -8,10 +8,9 @@ import GooeySearch from "@/components/originkit/ui/gooey-search";
 
 type Props = {
   className?: string;
-  variant?: "animated" | "compact";
 };
 
-export function SearchForm({ className, variant = "animated" }: Props) {
+export function SearchForm({ className }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -60,9 +59,6 @@ export function SearchForm({ className, variant = "animated" }: Props) {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     handleSearch(term);
   };
-
-
-
   return (
     <div role="search" aria-busy={isPending} className={className}>
       <GooeySearch
@@ -70,15 +66,16 @@ export function SearchForm({ className, variant = "animated" }: Props) {
         value={query}
         onChange={onChange}
         onSubmit={onSubmit}
+        alignment="left"
         width={400}
-        barHeight={64}
-        scale={64}
+        barHeight={56}
+        scale={100}
         fill="var(--background)"
         borderColor="var(--border)"
         iconColor="var(--foreground)"
         textColor="var(--foreground)"
         placeholderColor="var(--muted-foreground)"
-        style={{ height: "67px" }}
+        style={{ height: "96px" }}
       />
     </div>
   );

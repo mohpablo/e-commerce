@@ -1,36 +1,116 @@
+
 import { Suspense } from "react";
-import { Separator } from "@/components/ui/separator";
+
 import { ProductSortSelect } from "@/components/products/productSort";
 import { ProductsResults } from "@/components/products/productsResults";
 import { ProductsGridSkeleton } from "@/components/products/productsGridSkeleton";
+import { SearchForm } from "@/components/common/searchForm";
 
-type SearchParams = Promise<{ page?: string; sort?: string; q?: string }>;
+type SearchParams = Promise<{
+  page?: string;
+  sort?: string;
+  q?: string;
+}>;
 
 export default async function ProductsPage({
   searchParams,
 }: {
   searchParams: SearchParams;
 }) {
-  const { page: pageParam, sort = "newest", q = "" } = await searchParams;
-  const page = Math.max(1, Number.parseInt(pageParam ?? "1", 10) || 1);
+  const {
+    page: pageParam,
+    sort = "newest",
+    q = "",
+  } = await searchParams;
+
+  const page = Math.max(
+    1,
+    Number.parseInt(pageParam ?? "1", 10) || 1,
+  );
+
   return (
-    <main className="container mx-auto px-4 py-10">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <h1 className="text-3xl font-semibold tracking-tight">All products</h1>
+    <main className="min-h-screen">
+      <div className="container mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+        {/* Page Header */}
+        <header className="mb-8 space-y-3 sm:mb-10">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/5 px-3 py-1 text-xs font-medium tracking-wide text-primary">
+            PRODUCT CATALOG
+          </div>
 
-        <Suspense fallback={null}>
-          <ProductSortSelect value={sort} />
-        </Suspense>
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+              Explore Products
+            </h1>
+
+            <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Discover our collection and find exactly what you are
+              looking for.
+            </p>
+          </div>
+        </header>
+
+        {/* Search & Filters */}
+        <div className="mb-8 rounded-2xl border border-border/70 bg-card/70 p-4 shadow-sm backdrop-blur-xl sm:p-5">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-[minmax(0,1fr)_220px] sm:items-center">
+            {/* Search */}
+            <div className="flex min-w-0 items-center justify-between gap-4">
+              <div className="min-w-0 space-y-1">
+                <h2 className="text-base font-semibold tracking-tight sm:text-lg">
+                  Looking for something specific?
+                </h2>
+
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  Click the search icon to explore our collection.
+                </p>
+              </div>
+
+              <div className="flex shrink-0 items-center justify-end">
+                <Suspense
+                  fallback={
+                    <div className="size-12 animate-pulse rounded-full bg-muted" />
+                  }
+                >
+                  <SearchForm className="shrink-0" />
+                </Suspense>
+              </div>
+            </div>
+
+            {/* Sorting */}
+            <div className="flex min-w-0 items-center gap-3 border-t border-border/70 pt-4 sm:border-l sm:border-t-0 sm:pl-4 sm:pt-0">
+              <span className="shrink-0 text-sm font-medium text-muted-foreground">
+                Sort by
+              </span>
+
+              <div className="min-w-0 flex-1">
+                <Suspense
+                  fallback={
+                    <div className="h-10 w-full animate-pulse rounded-lg bg-muted" />
+                  }
+                >
+                  <ProductSortSelect
+                    value={sort}
+                    className="w-full"
+                  />
+                </Suspense>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Results */}
+        <section aria-label="Product results" className="min-w-0">
+          <Suspense
+            key={`${page}-${sort}-${q}`}
+            fallback={<ProductsGridSkeleton />}
+          >
+            <ProductsResults
+              page={page}
+              sort={sort}
+              q={q}
+            />
+          </Suspense>
+        </section>
       </div>
-
-      <Separator className="my-6" />
-
-      <Suspense
-        key={`${page}-${sort}-${q}`}
-        fallback={<ProductsGridSkeleton />}
-      >
-        <ProductsResults page={page} sort={sort} q={q} />
-      </Suspense>
     </main>
   );
 }

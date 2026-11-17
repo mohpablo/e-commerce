@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
@@ -6,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "../../lib/fromat";
 import { ProductCardData } from "@/types/product.type";
 import { ProductAddToCartButton } from "./productCardAddButton";
+import { ProductCardVisual } from "./productCardVisual";
 
 type Props = {
   product: ProductCardData;
@@ -17,34 +17,20 @@ export function ProductCard({ product }: Props) {
   const lowStock = product.stock > 0 && product.stock <= 5;
 
   return (
-    <article className="group flex flex-col">
+    <article className="group/card flex min-w-0 flex-col">
       <Link
         href={`/products/${product.slug}`}
-        className="relative block aspect-4/5 overflow-hidden rounded-2xl bg-muted"
+        className="group/product-media relative block aspect-4/5 overflow-hidden rounded-3xl border border-border/70 bg-muted shadow-sm transition-[border-color,box-shadow] duration-300 hover:border-primary/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
         {primary ? (
-          <>
-            <Image
-              src={primary.url}
-              alt={primary.alt ?? product.name}
-              fill
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              className={`object-cover transition-opacity duration-500 ${
-                secondary ? "group-hover:opacity-0" : ""
-              } ${soldOut ? "grayscale" : ""}`}
-            />
-            {secondary && (
-              <Image
-                src={secondary.url}
-                alt={secondary.alt ?? product.name}
-                fill
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                className="object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-              />
-            )}
-          </>
+          <ProductCardVisual
+            primary={primary}
+            secondary={secondary}
+            productName={product.name}
+            soldOut={soldOut}
+          />
         ) : (
-          <div className="flex size-full items-center justify-center text-sm text-muted-foreground">
+          <div className="flex size-full items-center justify-center bg-gradient-to-br from-muted via-card to-accent/70 text-sm text-muted-foreground">
             No image
           </div>
         )}
@@ -52,29 +38,29 @@ export function ProductCard({ product }: Props) {
         {(soldOut || lowStock) && (
           <Badge
             variant="secondary"
-            className="absolute left-3 top-3 rounded-full bg-background/90"
+            className="absolute left-3 top-3 z-10 rounded-full border border-border/60 bg-background/90 shadow-sm backdrop-blur"
           >
             {soldOut ? "Sold out" : `Only ${product.stock} left`}
           </Badge>
         )}
       </Link>
 
-      <div className="mt-3 flex flex-1 flex-col gap-1 px-1">
+      <div className="mt-3 flex flex-1 flex-col gap-1 rounded-2xl border border-border/60 bg-card/70 p-3 transition-colors duration-300 group-hover/card:bg-card/90">
         <Link
           href={`/categories/${product.category.slug}`}
-          className="text-xs text-muted-foreground hover:text-foreground"
+          className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-primary"
         >
           {product.category.name}
         </Link>
 
         <Link href={`/products/${product.slug}`}>
-          <h3 className="line-clamp-1 font-medium tracking-tight">
+          <h3 className="line-clamp-2 min-h-10 text-sm font-semibold tracking-tight sm:text-[15px]">
             {product.name}
           </h3>
         </Link>
 
-        <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
-          <span className="truncate text-sm font-semibold tabular-nums sm:text-base">
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-3">
+          <span className="truncate text-sm font-bold tabular-nums text-foreground sm:text-base">
             {formatPrice(product.price.toNumber())}
           </span>
 

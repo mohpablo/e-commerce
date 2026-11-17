@@ -51,14 +51,14 @@ export async function ProductsResults({ page, sort, q, category }: Props) {
         {items.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
-
-        <ProductsPagination
-          page={page}
-          totalPages={totalPages}
-          sort={sort}
-          q={q}
-        />
       </div>
+
+      <ProductsPagination
+        page={page}
+        totalPages={totalPages}
+        sort={sort}
+        q={q}
+      />
     </>
   );
 }

@@ -69,6 +69,7 @@ export interface GooeySearchProps {
     gap?: number
     scale?: number
     barHeight?: number
+    alignment?: "left" | "center" | "right"
     corner?: number
     placement?: Partial<Placement>
     give?: number
@@ -301,6 +302,7 @@ export default function GooeySearch({
     gap = 14,
     scale = 100,
     barHeight = SHUT,
+    alignment = "center",
     corner = CORNER,
     placement,
     give = 50,
@@ -567,7 +569,22 @@ export default function GooeySearch({
 
     return (
         // The frame: fills it edge to edge with the Background and centres the search in it.
-        <div style={{ width: "100%", height: "100%", ...style, display: "flex", alignItems: "center", justifyContent: "center", background }}>
+        <div
+            style={{
+                width: "100%",
+                height: "100%",
+                ...style,
+                display: "flex",
+                alignItems: "center",
+                justifyContent:
+                    alignment === "left"
+                        ? "flex-start"
+                        : alignment === "right"
+                          ? "flex-end"
+                          : "center",
+                background,
+            }}
+        >
         <div
             ref={frame}
             style={{

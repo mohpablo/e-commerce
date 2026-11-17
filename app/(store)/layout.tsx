@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { getCategories } from "@/services/category/category.service";
 import { getCartCount } from "@/services/cart/cart.service";
-
+import { StorefrontBackground } from "@/components/store/storefrontBackground";
 
 export default async function StoreLayout({
   children,
@@ -21,10 +21,13 @@ export default async function StoreLayout({
   ]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <Header categories={categories} cartCount={cartCount} user={user} />
-      <main className="flex-1">{children}</main>
-      <Footer categories={categories} />
+    <div className="relative isolate min-h-screen bg-background text-foreground">
+      <StorefrontBackground />
+      <div className="relative z-10 flex min-h-screen flex-col">
+        <Header categories={categories} cartCount={cartCount} user={user} />
+        <main className="flex-1">{children}</main>
+        <Footer categories={categories} />
+      </div>
     </div>
   );
 }

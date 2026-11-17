@@ -23,7 +23,7 @@ export default async function CheckoutPage() {
   const total = subtotal + tax + shipping;
 
   return (
-    <main className="min-h-screen bg-background text-foreground transition-colors">
+    <main className="min-h-screen text-foreground transition-colors">
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
         <div className="grid items-start gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-10">
           <div className="space-y-6">

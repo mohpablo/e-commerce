@@ -40,6 +40,7 @@ interface TiltProps {
     shade: number
     background: string
     style?: React.CSSProperties
+    children?: React.ReactNode
 }
 
 const PHOTO = "https://images.unsplash.com/photo-1639427203692-a69f54ce8284?auto=format&fit=crop&w=780&h=960&q=80"
@@ -104,7 +105,7 @@ function useSpring(target: number, tune = 50, instant = false) {
 }
 
 export default function Tilt(props: TiltProps) {
-    const { image, offsetY = 0, alt, cardWidth = 450, cardHeight = 550, scale = 78, tilt, corner, shade, background, style } = props
+    const { image, offsetY = 0, alt, cardWidth = 450, cardHeight = 550, scale = 78, tilt, corner, shade, background, style, children } = props
 
     const root = useRef<HTMLDivElement | null>(null)
     const skin = useRef<HTMLDivElement | null>(null)
@@ -197,8 +198,8 @@ export default function Tilt(props: TiltProps) {
                 onPointerCancel={() => setOn(false)}
             >
                 <div
-                    role="img"
-                    aria-label={alt}
+                    role={children ? undefined : "img"}
+                    aria-label={children ? undefined : alt}
                     style={{
                         position: "absolute",
                         inset: 0,
@@ -218,6 +219,7 @@ export default function Tilt(props: TiltProps) {
                         // which left it soft under a scaled preview and drew it differently run to run.
                     }}
                 >
+                    {children}
                     {/* Sunk side darker, risen side lighter, along the line through the pointer. */}
                     <span
                         aria-hidden="true"

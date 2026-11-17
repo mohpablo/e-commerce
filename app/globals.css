@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@source "../components/originkit";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -53,7 +54,6 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 }
-
 :root {
   /* Crisp, modern light theme neutrals */
   --background: oklch(0.985 0.002 264);
