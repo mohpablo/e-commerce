@@ -1,4 +1,3 @@
-
 import { Suspense } from "react";
 
 import { ProductSortSelect } from "@/components/products/productSort";
@@ -17,16 +16,9 @@ export default async function ProductsPage({
 }: {
   searchParams: SearchParams;
 }) {
-  const {
-    page: pageParam,
-    sort = "newest",
-    q = "",
-  } = await searchParams;
+  const { page: pageParam, sort = "newest", q = "" } = await searchParams;
 
-  const page = Math.max(
-    1,
-    Number.parseInt(pageParam ?? "1", 10) || 1,
-  );
+  const page = Math.max(1, Number.parseInt(pageParam ?? "1", 10) || 1);
 
   return (
     <main className="min-h-screen">
@@ -43,40 +35,43 @@ export default async function ProductsPage({
             </h1>
 
             <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Discover our collection and find exactly what you are
-              looking for.
+              Discover our collection and find exactly what you are looking for.
             </p>
           </div>
         </header>
 
         {/* Search & Filters */}
-        <div className="mb-8 rounded-2xl border border-border/70 bg-card/70 p-4 shadow-sm backdrop-blur-xl sm:p-5">
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-[minmax(0,1fr)_220px] sm:items-center">
+        <div className="mb-8 rounded-2xl border border-border/70 bg-card/80 p-4 shadow-sm backdrop-blur-xl sm:p-5">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
             {/* Search */}
-            <div className="flex min-w-0 items-center justify-between gap-4">
-              <div className="min-w-0 space-y-1">
-                <h2 className="text-base font-semibold tracking-tight sm:text-lg">
-                  Looking for something specific?
+            {/* Search */}
+            <div className="flex min-w-0 flex-1 flex-col gap-3">
+              <div className="space-y-1">
+                <h2 className="text-sm font-semibold tracking-tight sm:text-base">
+                  Find your product
                 </h2>
 
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  Click the search icon to explore our collection.
+                <p className="hidden text-xs text-muted-foreground sm:block sm:text-sm">
+                  Search through our collection.
                 </p>
               </div>
 
-              <div className="flex shrink-0 items-center justify-end">
+              <div className="">
                 <Suspense
                   fallback={
-                    <div className="size-12 animate-pulse rounded-full bg-muted" />
+                    <div className="size-11 animate-pulse rounded-full bg-muted" />
                   }
                 >
-                  <SearchForm className="shrink-0" />
+                  <SearchForm />
                 </Suspense>
               </div>
             </div>
 
+            {/* Divider */}
+            <div className="h-px w-full bg-border/70 sm:h-10 sm:w-px" />
+
             {/* Sorting */}
-            <div className="flex min-w-0 items-center gap-3 border-t border-border/70 pt-4 sm:border-l sm:border-t-0 sm:pl-4 sm:pt-0">
+            <div className="flex min-w-0 items-center gap-3 sm:w-[240px] sm:shrink-0">
               <span className="shrink-0 text-sm font-medium text-muted-foreground">
                 Sort by
               </span>
@@ -87,10 +82,7 @@ export default async function ProductsPage({
                     <div className="h-10 w-full animate-pulse rounded-lg bg-muted" />
                   }
                 >
-                  <ProductSortSelect
-                    value={sort}
-                    className="w-full"
-                  />
+                  <ProductSortSelect value={sort} className="w-full" />
                 </Suspense>
               </div>
             </div>
@@ -103,11 +95,7 @@ export default async function ProductsPage({
             key={`${page}-${sort}-${q}`}
             fallback={<ProductsGridSkeleton />}
           >
-            <ProductsResults
-              page={page}
-              sort={sort}
-              q={q}
-            />
+            <ProductsResults page={page} sort={sort} q={q} />
           </Suspense>
         </section>
       </div>
